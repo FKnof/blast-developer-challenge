@@ -122,3 +122,18 @@ export interface ProgressionData {
   halftimeRound: number;
   rounds: RoundDataPoint[];
 }
+
+// Rounds types
+export interface RoundInfo {
+  round: number;
+  duration: number; // in seconds
+  winner: string;   // team name
+  winnerSide: 'CT' | 'T';
+}
+
+export interface RoundsData {
+  rounds: RoundInfo[];
+  averageDuration: number;
+  team1: { name: string };
+  team2: { name: string };
+}

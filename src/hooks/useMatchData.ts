@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import type { MatchData, ScoreboardData, ProgressionData } from '../types';
+import type { MatchData, ScoreboardData, ProgressionData, RoundsData } from '../types';
 
 interface UseMatchDataReturn {
   match: MatchData | null;
   scoreboard: ScoreboardData | null;
   progression: ProgressionData | null;
+  rounds: RoundsData | null;
   loading: boolean;
   error: string | null;
 }
@@ -13,6 +14,7 @@ export function useMatchData(): UseMatchDataReturn {
   const [match, setMatch] = useState<MatchData | null>(null);
   const [scoreboard, setScoreboard] = useState<ScoreboardData | null>(null);
   const [progression, setProgression] = useState<ProgressionData | null>(null);
+  const [rounds, setRounds] = useState<RoundsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,10 +24,11 @@ export function useMatchData(): UseMatchDataReturn {
         setLoading(true);
         setError(null);
 
-        const [matchRes, scoreboardRes, progressionRes] = await Promise.all([
+        const [matchRes, scoreboardRes, progressionRes, roundsRes] = await Promise.all([
           fetch('/api/match'),
           fetch('/api/scoreboard'),
           fetch('/api/progression'),
+          fetch('/api/rounds'),
         ]);
 
         if (!matchRes.ok) {
@@ -37,14 +40,19 @@ export function useMatchData(): UseMatchDataReturn {
         if (!progressionRes.ok) {
           throw new Error(`Failed to fetch progression: ${progressionRes.statusText}`);
         }
+        if (!roundsRes.ok) {
+          throw new Error(`Failed to fetch rounds: ${roundsRes.statusText}`);
+        }
 
         const matchData = await matchRes.json();
         const scoreboardData = await scoreboardRes.json();
         const progressionData = await progressionRes.json();
+        const roundsData = await roundsRes.json();
 
         setMatch(matchData);
         setScoreboard(scoreboardData);
         setProgression(progressionData);
+        setRounds(roundsData);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error');
       } finally {
@@ -55,5 +63,5 @@ export function useMatchData(): UseMatchDataReturn {
     fetchData();
   }, []);
 
-  return { match, scoreboard, progression, loading, error };
+  return { match, scoreboard, progression, rounds, loading, error };
 }

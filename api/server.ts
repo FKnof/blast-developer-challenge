@@ -3,6 +3,7 @@ import cors from 'cors';
 import { getMatchData } from './_lib/stats/match.js';
 import { getScoreboard } from './_lib/stats/scoreboard.js';
 import { getProgression } from './_lib/stats/progression.js';
+import { getRoundsData } from './_lib/stats/rounds.js';
 
 const app = express();
 const PORT = 3001;
@@ -37,6 +38,16 @@ app.get('/api/progression', (_req, res) => {
   } catch (error) {
     console.error('Error getting progression:', error);
     res.status(500).json({ error: 'Failed to get progression data' });
+  }
+});
+
+app.get('/api/rounds', (_req, res) => {
+  try {
+    const rounds = getRoundsData();
+    res.json(rounds);
+  } catch (error) {
+    console.error('Error getting rounds data:', error);
+    res.status(500).json({ error: 'Failed to get rounds data' });
   }
 });
 

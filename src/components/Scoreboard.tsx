@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Card, CardContent, CardHeader, CardDescription } from './ui/card';
 import { TeamScoreboard } from './TeamScoreboard';
 import type { ScoreboardData } from '../types';
 
@@ -10,7 +10,7 @@ export function Scoreboard({ scoreboard }: ScoreboardProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Match Stats</CardTitle>
+        <CardDescription>Individual player performance across the match.</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -13,7 +13,7 @@ import {
   ChartLegendContent,
   type ChartConfig,
 } from './ui/chart';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card';
+import { Card, CardContent, CardHeader, CardDescription } from './ui/card';
 
 export interface RoundDataPoint {
   round: number;
@@ -98,10 +98,7 @@ export function ProgressionChart({ data }: ProgressionChartProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Score Progression</CardTitle>
-        <CardDescription>
-          How did the match evolve round by round?
-        </CardDescription>
+        <CardDescription>How did the match evolve round by round?</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="min-h-[300px] w-full">

@@ -10,7 +10,7 @@ import {
   LabelList,
 } from 'recharts';
 import { Star, User } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Card, CardContent, CardHeader, CardDescription } from './ui/card';
 import type { PlayerStats, MatchAverages, TeamScoreboard } from '../types';
 
 interface PlayerSpotlightProps {
@@ -90,7 +90,7 @@ export function PlayerSpotlight({ teams, matchAverages }: PlayerSpotlightProps) 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Player Spotlight</CardTitle>
+        <CardDescription>Analyze individual player stats compared to match average.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Player Selector */}

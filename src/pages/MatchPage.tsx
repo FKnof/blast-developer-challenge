@@ -4,13 +4,14 @@ import { MatchHeader } from '../components/MatchHeader';
 import { Scoreboard } from '../components/Scoreboard';
 import { ProgressionChart } from '../components/ProgressionChart';
 import { PlayerSpotlight } from '../components/PlayerSpotlight';
+import { RoundsChart } from '../components/RoundsChart';
 import { Card, CardContent } from '../components/ui/card';
 import { Skeleton } from '../components/ui/skeleton';
 
-type Tab = 'scoreboard' | 'progression' | 'players';
+type Tab = 'scoreboard' | 'progression' | 'players' | 'rounds';
 
 export function MatchPage() {
-  const { match, scoreboard, progression, loading, error } = useMatchData();
+  const { match, scoreboard, progression, rounds, loading, error } = useMatchData();
   const [activeTab, setActiveTab] = useState<Tab>('scoreboard');
 
   if (loading) {
@@ -62,7 +63,7 @@ export function MatchPage() {
     );
   }
 
-  if (!match || !scoreboard || !progression) {
+  if (!match || !scoreboard || !progression || !rounds) {
     return null;
   }
 
@@ -81,7 +82,7 @@ export function MatchPage() {
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
-            Scoreboard
+            Match Stats
           </button>
           <button
             onClick={() => setActiveTab('progression')}
@@ -91,7 +92,7 @@ export function MatchPage() {
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
-            Progression
+            Score Progression
           </button>
           <button
             onClick={() => setActiveTab('players')}
@@ -101,7 +102,17 @@ export function MatchPage() {
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
-            Players
+            Player Spotlight
+          </button>
+          <button
+            onClick={() => setActiveTab('rounds')}
+            className={`px-4 py-2 font-medium transition-colors ${
+              activeTab === 'rounds'
+                ? 'border-b-2 border-primary text-primary'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            Round Durations
           </button>
         </div>
         
@@ -114,6 +125,7 @@ export function MatchPage() {
             matchAverages={scoreboard.matchAverages} 
           />
         )}
+        {activeTab === 'rounds' && <RoundsChart data={rounds} />}
       </div>
     </div>
   );
