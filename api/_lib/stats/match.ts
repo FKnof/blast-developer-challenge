@@ -20,6 +20,8 @@ export function getMatchData(): MatchData {
   let map = 'unknown';
   let date = '';
   let totalRounds = 0;
+  let matchStartTs = 0;
+  let matchEndTs = 0;
   
   // === SCHRITT 1: Aktuelles Seiten-Mapping tracken ===
   // Wird bei JEDEM match_status_team Event aktualisiert
@@ -46,6 +48,14 @@ export function getMatchData(): MatchData {
       if (event.ts && !date) {
         date = new Date(event.ts).toISOString();
       }
+    }
+    
+    // Track first round_start and last round_end for total duration
+    if (event.type === 'round_start' && event.round === 1 && !matchStartTs) {
+      matchStartTs = event.ts;
+    }
+    if (event.type === 'round_end') {
+      matchEndTs = event.ts; // Keep updating to get the last one
     }
     
     // === SCHRITT 3: Seiten-Mapping IMMER aktualisieren ===
@@ -109,6 +119,11 @@ export function getMatchData(): MatchData {
   const team1Score = teamScores.get(team1Name) ?? 0;
   const team2Score = teamScores.get(team2Name) ?? 0;
   
+  // Calculate total match duration in seconds
+  const totalDuration = matchStartTs && matchEndTs 
+    ? Math.round((matchEndTs - matchStartTs) / 1000) 
+    : 0;
+  
   return {
     map,
     date,
@@ -119,6 +134,7 @@ export function getMatchData(): MatchData {
       t: { name: team2Name || 'Team 2', score: team2Score },
     },
     totalRounds,
+    totalDuration,
   };
 }
 

@@ -98,7 +98,7 @@ export function ProgressionChart({ data }: ProgressionChartProps) {
   return (
     <Card>
       <CardHeader>
-        <CardDescription>How did the match evolve round by round?</CardDescription>
+        <CardDescription>Score development throughout the match, round by round.</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="min-h-[300px] w-full">

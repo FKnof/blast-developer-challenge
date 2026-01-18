@@ -18,11 +18,16 @@ interface RoundsChartProps {
 export function RoundsChart({ data }: RoundsChartProps) {
   const { rounds, averageDuration, team1, team2 } = data;
 
-  // Format seconds to mm:ss
+  // Format seconds to mm:ss (for X-axis)
   const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Format with "min" suffix (for labels and stats)
+  const formatDurationWithUnit = (seconds: number) => {
+    return `${formatDuration(seconds)} min`;
   };
 
   // Custom tooltip
@@ -34,7 +39,7 @@ export function RoundsChart({ data }: RoundsChartProps) {
       <div className="bg-popover border rounded-lg shadow-lg p-3 text-sm">
         <div className="font-semibold mb-1">Round {round.round}</div>
         <div className="text-muted-foreground">
-          Duration: <span className="text-foreground font-medium">{formatDuration(round.duration)}</span>
+          Duration: <span className="text-foreground font-medium">{formatDurationWithUnit(round.duration)}</span>
         </div>
         <div className="text-muted-foreground">
           Winner: <span className="text-foreground font-medium">{round.winner}</span> ({round.winnerSide})
@@ -46,7 +51,7 @@ export function RoundsChart({ data }: RoundsChartProps) {
   return (
     <Card>
       <CardHeader>
-        <CardDescription>How long did each round last? Color indicates the winner.</CardDescription>
+        <CardDescription>Duration of each round. Color indicates the winning team.</CardDescription>
       </CardHeader>
       <CardContent>
         {/* Legend */}
@@ -111,7 +116,7 @@ export function RoundsChart({ data }: RoundsChartProps) {
                 strokeDasharray="4 4"
                 strokeWidth={2}
                 label={{
-                  value: `Avg ${formatDuration(averageDuration)}`,
+                  value: `Avg ${formatDurationWithUnit(averageDuration)}`,
                   position: 'top',
                   fontSize: 11,
                   fill: 'hsl(var(--muted-foreground))',
@@ -127,20 +132,20 @@ export function RoundsChart({ data }: RoundsChartProps) {
             <div className="text-muted-foreground">Shortest</div>
             <div className="font-semibold">
               {rounds.length > 0 
-                ? formatDuration(Math.min(...rounds.map(r => r.duration)))
+                ? formatDurationWithUnit(Math.min(...rounds.map(r => r.duration)))
                 : '-'
               }
             </div>
           </div>
           <div>
             <div className="text-muted-foreground">Average</div>
-            <div className="font-semibold">{formatDuration(averageDuration)}</div>
+            <div className="font-semibold">{formatDurationWithUnit(averageDuration)}</div>
           </div>
           <div>
             <div className="text-muted-foreground">Longest</div>
             <div className="font-semibold">
               {rounds.length > 0 
-                ? formatDuration(Math.max(...rounds.map(r => r.duration)))
+                ? formatDurationWithUnit(Math.max(...rounds.map(r => r.duration)))
                 : '-'
               }
             </div>

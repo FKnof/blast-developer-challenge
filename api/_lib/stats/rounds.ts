@@ -87,7 +87,8 @@ export function getRoundsData(): RoundsData {
     const winner = roundWinners.get(r);
     
     if (startTs && endTs && winner) {
-      const duration = endTs - startTs;
+      // ts is in milliseconds (from Date.parse), convert to seconds
+      const duration = Math.round((endTs - startTs) / 1000);
       
       rounds.push({
         round: r,
