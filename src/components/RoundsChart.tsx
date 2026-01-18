@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from 'recharts';
 import { Card, CardContent, CardHeader, CardDescription } from './ui/card';
-import type { RoundsData } from '../types';
+import type { RoundsData, TooltipProps, RoundInfo } from '../types';
 
 interface RoundsChartProps {
   data: RoundsData;
@@ -30,11 +30,10 @@ export function RoundsChart({ data }: RoundsChartProps) {
     return `${formatDuration(seconds)} min`;
   };
 
-  // Custom tooltip
-  const CustomTooltip = ({ active, payload }: any) => {
+  const CustomTooltip = ({ active, payload }: TooltipProps) => {
     if (!active || !payload || !payload.length) return null;
     
-    const round = payload[0].payload;
+    const round = payload[0].payload as unknown as RoundInfo;
     return (
       <div className="bg-popover border rounded-lg shadow-lg p-3 text-sm">
         <div className="font-semibold mb-1">Round {round.round}</div>

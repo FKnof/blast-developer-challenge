@@ -161,7 +161,6 @@ let cachedResult: ParseResult | null = null;
 export function getParsedEvents(): ParseResult {
   if (!cachedResult) {
     cachedResult = parseLogFile();
-    console.log('Parser stats:', cachedResult.stats);
   }
   return cachedResult;
 }

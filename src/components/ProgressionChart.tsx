@@ -14,19 +14,7 @@ import {
   type ChartConfig,
 } from './ui/chart';
 import { Card, CardContent, CardHeader, CardDescription } from './ui/card';
-
-export interface RoundDataPoint {
-  round: number;
-  team1Score: number;
-  team2Score: number;
-}
-
-export interface ProgressionData {
-  team1: { name: string };
-  team2: { name: string };
-  halftimeRound: number;
-  rounds: RoundDataPoint[];
-}
+import type { ProgressionData, TooltipProps } from '../types';
 
 interface ProgressionChartProps {
   data: ProgressionData;
@@ -35,20 +23,18 @@ interface ProgressionChartProps {
 export function ProgressionChart({ data }: ProgressionChartProps) {
   const { team1, team2, halftimeRound, rounds } = data;
   
-  // Custom Tooltip mit CT/T Info
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     if (!active || !payload?.length) return null;
     
     const round = label as number;
     const isSecondHalf = round > halftimeRound;
     
-    // Erste Hälfte: team1 = CT, team2 = T
-    // Zweite Hälfte: team1 = T, team2 = CT
+    // Teams swap sides at halftime
     const team1Side = isSecondHalf ? 'T' : 'CT';
     const team2Side = isSecondHalf ? 'CT' : 'T';
     
-    const team1Data = payload.find((p: any) => p.dataKey === 'team1Score');
-    const team2Data = payload.find((p: any) => p.dataKey === 'team2Score');
+    const team1Data = payload.find((p) => p.dataKey === 'team1Score');
+    const team2Data = payload.find((p) => p.dataKey === 'team2Score');
     
     return (
       <div className="rounded-lg border bg-background p-3 shadow-md">
@@ -77,7 +63,6 @@ export function ProgressionChart({ data }: ProgressionChartProps) {
     );
   };
 
-  // Chart-Konfiguration mit Team-Namen und Farben
   const chartConfig: ChartConfig = {
     team1Score: {
       label: team1.name,
@@ -89,10 +74,9 @@ export function ProgressionChart({ data }: ProgressionChartProps) {
     },
   };
 
-  // Finde den höchsten Score für die Y-Achse
   const maxScore = Math.max(
     ...rounds.map(r => Math.max(r.team1Score, r.team2Score)),
-    16 // Minimum 16 anzeigen (Siegbedingung)
+    16 // 16 rounds needed to win
   );
 
   return (
@@ -137,7 +121,7 @@ export function ProgressionChart({ data }: ProgressionChartProps) {
               }}
             />
             
-            {/* Horizontale Linie bei 16 (Siegbedingung) */}
+            {/* Win threshold line */}
             <ReferenceLine
               y={16}
               stroke="hsl(var(--muted-foreground))"
@@ -149,7 +133,6 @@ export function ProgressionChart({ data }: ProgressionChartProps) {
             
             <ChartLegend content={<ChartLegendContent />} />
             
-            {/* Team 1 Linie */}
             <Line
               type="linear"
               dataKey="team1Score"
@@ -159,7 +142,6 @@ export function ProgressionChart({ data }: ProgressionChartProps) {
               activeDot={{ r: 5 }}
             />
             
-            {/* Team 2 Linie */}
             <Line
               type="linear"
               dataKey="team2Score"

@@ -1,19 +1,7 @@
 import { getParsedEvents } from '../parser/index.js';
 import { getMatchData } from './match.js';
-
-export interface RoundInfo {
-  round: number;
-  duration: number; // in seconds
-  winner: string;   // team name
-  winnerSide: 'CT' | 'T';
-}
-
-export interface RoundsData {
-  rounds: RoundInfo[];
-  averageDuration: number;
-  team1: { name: string };
-  team2: { name: string };
-}
+import { HALFTIME_ROUND } from '../../../src/types/index.js';
+import type { RoundsData, RoundInfo } from '../../../src/types/index.js';
 
 /**
  * Calculate round durations from parsed events
@@ -27,9 +15,7 @@ export function getRoundsData(): RoundsData {
   const roundEnds: Map<number, number> = new Map();
   const roundWinners: Map<number, { team: string; side: 'CT' | 'T' }> = new Map();
   
-  // Track team-to-side mapping (changes at halftime)
-  // At start: team1 = CT, team2 = T
-  // After round 15: team1 = T, team2 = CT
+  // Teams swap sides at halftime (after HALFTIME_ROUND)
   const team1Name = matchData.teams.ct.name;
   const team2Name = matchData.teams.t.name;
   
@@ -58,7 +44,7 @@ export function getRoundsData(): RoundsData {
       const trigger = payload.trigger || '';
       if (trigger.includes('Win') || trigger.includes('Bombed') || trigger.includes('Defused')) {
         const winningSide = payload.team as 'CT' | 'TERRORIST';
-        const isSecondHalf = roundNum > 15;
+        const isSecondHalf = roundNum > HALFTIME_ROUND;
         
         // Determine winning team name based on side and half
         let winnerName: string;

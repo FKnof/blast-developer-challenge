@@ -1,18 +1,9 @@
-import type { MatchData, GameEvent } from '../../../src/types/index.js';
+import type { MatchData } from '../../../src/types/index.js';
 import { getParsedEvents } from '../parser/index.js';
 
-// interface TeamInfo {
-//   name: string;
-//   score: number;
-// }
-
 /**
- * Extract match metadata from parsed events
- * 
- * WICHTIG: Die Teams wechseln bei Halftime die Seiten (CT <-> T).
- * Deshalb tracken wir:
- * 1. Das aktuelle Seiten-Mapping (welches Team ist gerade CT/T)
- * 2. Scores pro TEAM-NAME (nicht pro Seite)
+ * Extract match metadata from parsed events.
+ * Teams swap sides at halftime, so we track scores by team name (not by side).
  */
 export function getMatchData(): MatchData {
   const { events } = getParsedEvents();
@@ -20,70 +11,56 @@ export function getMatchData(): MatchData {
   let map = 'unknown';
   let date = '';
   let totalRounds = 0;
-  let matchStartTs = 0;  // Timestamp when match started
-  let gameOverTs = 0;    // Timestamp when game ended
+  let matchStartTs = 0;
+  let gameOverTs = 0;
   
-  // === SCHRITT 1: Aktuelles Seiten-Mapping tracken ===
-  // Wird bei JEDEM match_status_team Event aktualisiert
+  // Track which team is currently on which side
   const currentSideToTeam: { CT: string; TERRORIST: string } = {
     CT: '',
     TERRORIST: '',
   };
   
-  // === SCHRITT 2: Scores pro TEAM-NAME speichern ===
-  // Nicht pro Seite (CT/T), sondern pro echtem Team-Namen
+  // Store scores by team name
   const teamScores: Map<string, number> = new Map();
   
-  // Speichere die initialen Team-Namen (für die Reihenfolge in der UI)
-  let team1Name = '';  // Das Team, das zuerst CT war
-  let team2Name = '';  // Das Team, das zuerst T war
+  // Store initial team names for UI order
+  let team1Name = '';
+  let team2Name = '';
   
   for (const event of events) {
-    // === Match-Start Info (Map, Datum, Timestamp) ===
     if (event.type === 'match_start') {
       const payload = event.payload as { map?: string };
       if (payload.map) {
         map = payload.map;
       }
-      // Save timestamp - will be overwritten, keeping the last match_start
-      // (The parser already filters to only include events after the real match start)
       matchStartTs = event.ts;
       if (event.ts && !date) {
         date = new Date(event.ts).toISOString();
       }
     }
     
-    // Get timestamp from game_over event to calculate total match duration
     if (event.type === 'game_over') {
       gameOverTs = event.ts;
-      // Also get map from game_over if not already set
       const payload = event.payload as { map?: string };
       if (payload.map && map === 'unknown') {
         map = payload.map;
       }
     }
     
-    // === SCHRITT 3: Seiten-Mapping IMMER aktualisieren ===
-    // Bei jedem match_status_team Event wird das Mapping neu gesetzt
+    // Update side mapping on team status events
     if (event.type === 'match_status_team') {
       const payload = event.payload as { side: string; teamName: string };
       
       if (payload.side === 'CT') {
         currentSideToTeam.CT = payload.teamName;
-        // Erstes CT-Team merken für UI-Reihenfolge
-        if (!team1Name) {
-          team1Name = payload.teamName;
-        }
+        if (!team1Name) team1Name = payload.teamName;
       } else if (payload.side === 'TERRORIST') {
         currentSideToTeam.TERRORIST = payload.teamName;
-        // Erstes T-Team merken für UI-Reihenfolge
-        if (!team2Name) {
-          team2Name = payload.teamName;
-        }
+        if (!team2Name) team2Name = payload.teamName;
       }
     }
     
-    // Fallback: team_playing Events (ohne MatchStatus: Prefix)
+    // Fallback: team_playing events
     if (event.type === 'team_playing') {
       const payload = event.payload as { side: string; teamName: string };
       if (payload.side === 'CT') {
@@ -95,7 +72,7 @@ export function getMatchData(): MatchData {
       }
     }
     
-    // === SCHRITT 4: Bei Score-Event das AKTUELLE Mapping verwenden ===
+    // Assign scores using current side mapping
     if (event.type === 'match_status_score') {
       const payload = event.payload as { 
         ctScore: number; 
@@ -103,29 +80,23 @@ export function getMatchData(): MatchData {
         roundsPlayed: number;
       };
       
-      // Score dem AKTUELLEN CT-Team zuweisen
       if (currentSideToTeam.CT) {
         teamScores.set(currentSideToTeam.CT, payload.ctScore);
       }
-      // Score dem AKTUELLEN T-Team zuweisen
       if (currentSideToTeam.TERRORIST) {
         teamScores.set(currentSideToTeam.TERRORIST, payload.tScore);
       }
       
-      // RoundsPlayed aus dem letzten Score-Event
       if (payload.roundsPlayed >= 0) {
         totalRounds = payload.roundsPlayed;
       }
     }
   }
   
-  // === SCHRITT 5: Ergebnis zusammenbauen ===
-  // team1 war initial CT, team2 war initial T
   const team1Score = teamScores.get(team1Name) ?? 0;
   const team2Score = teamScores.get(team2Name) ?? 0;
   
-  // Calculate total match duration from timestamps (in seconds)
-  // matchStartTs and gameOverTs are in milliseconds from Date.parse()
+  // Duration in seconds
   const totalDuration = matchStartTs && gameOverTs
     ? Math.round((gameOverTs - matchStartTs) / 1000)
     : 0;
@@ -134,20 +105,10 @@ export function getMatchData(): MatchData {
     map,
     date,
     teams: {
-      // "ct" und "t" sind hier nur Labels für die UI-Position
-      // team1 = links (war initial CT), team2 = rechts (war initial T)
       ct: { name: team1Name || 'Team 1', score: team1Score },
       t: { name: team2Name || 'Team 2', score: team2Score },
     },
     totalRounds,
     totalDuration,
   };
-}
-
-/**
- * Get all events of a specific type
- */
-export function getEventsByType(type: string): GameEvent[] {
-  const { events } = getParsedEvents();
-  return events.filter(e => e.type === type);
 }

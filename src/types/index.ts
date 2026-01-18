@@ -1,5 +1,8 @@
 // Shared types between frontend and backend
 
+// CS:GO match constants
+export const HALFTIME_ROUND = 15;
+
 export interface Player {
   name: string;
   id: number;
@@ -137,4 +140,23 @@ export interface RoundsData {
   averageDuration: number;
   team1: { name: string };
   team2: { name: string };
+}
+
+// Recharts custom component prop types
+export interface TooltipProps {
+  active?: boolean;
+  payload?: Array<{
+    dataKey: string;
+    value: number;
+    payload: Record<string, unknown>;
+  }>;
+  label?: string | number;
+}
+
+export interface XAxisTickProps {
+  x: number;
+  y: number;
+  payload: {
+    value: string;
+  };
 }

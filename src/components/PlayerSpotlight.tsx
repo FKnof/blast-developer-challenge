@@ -11,7 +11,7 @@ import {
 } from 'recharts';
 import { Star, User } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardDescription } from './ui/card';
-import type { PlayerStats, MatchAverages, TeamScoreboard } from '../types';
+import type { PlayerStats, MatchAverages, TeamScoreboard, XAxisTickProps } from '../types';
 
 interface PlayerSpotlightProps {
   teams: TeamScoreboard[];
@@ -72,8 +72,7 @@ export function PlayerSpotlight({ teams, matchAverages }: PlayerSpotlightProps) 
     },
   ];
 
-  // Custom tick component for multi-line labels
-  const CustomXAxisTick = ({ x, y, payload }: any) => {
+  const CustomXAxisTick = ({ x, y, payload }: XAxisTickProps) => {
     const lines = payload.value.split('\n');
     return (
       <g transform={`translate(${x},${y})`}>
@@ -187,7 +186,7 @@ export function PlayerSpotlight({ teams, matchAverages }: PlayerSpotlightProps) 
                     dataKey="name"
                     axisLine={false}
                     tickLine={false}
-                    tick={<CustomXAxisTick />}
+                    tick={(props: XAxisTickProps) => <CustomXAxisTick {...props} />}
                     interval={0}
                   />
                   <YAxis 

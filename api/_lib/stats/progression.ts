@@ -1,30 +1,15 @@
 import { getParsedEvents } from '../parser/index.js';
-
-export interface RoundDataPoint {
-  round: number;
-  team1Score: number;
-  team2Score: number;
-}
-
-export interface ProgressionData {
-  team1: { name: string };
-  team2: { name: string };
-  halftimeRound: number;
-  rounds: RoundDataPoint[];
-}
+import { HALFTIME_ROUND } from '../../../src/types/index.js';
+import type { ProgressionData, RoundDataPoint } from '../../../src/types/index.js';
 
 /**
- * Extrahiert die Score-Progression über alle Runden.
- * 
- * Einfache Logik:
- * 1. Finde das initiale Team-Mapping (wer ist CT, wer ist T)
- * 2. Gehe durch alle team_triggered Events (Runden-Siege)
- * 3. Zähle Scores hoch - bei Runde 16+ sind die Seiten getauscht
+ * Extract score progression across all rounds.
+ * Teams swap sides at halftime.
  */
 export function getProgression(): ProgressionData {
   const { events } = getParsedEvents();
   
-  // Schritt 1: Initiales Mapping finden (erstes team_playing Event)
+  // Find initial team mapping
   let ctTeam = '';
   let tTeam = '';
   
@@ -37,11 +22,10 @@ export function getProgression(): ProgressionData {
     }
   }
   
-  // team1 = initial CT, team2 = initial T
   const team1Name = ctTeam || 'Team 1';
   const team2Name = tTeam || 'Team 2';
   
-  // Schritt 2: Durch alle Runden-Siege gehen
+  // Process round wins
   const rounds: RoundDataPoint[] = [{ round: 0, team1Score: 0, team2Score: 0 }];
   const seenRounds = new Set<number>();
   let team1Score = 0;
@@ -51,20 +35,12 @@ export function getProgression(): ProgressionData {
     if (event.type !== 'team_triggered') continue;
     
     const payload = event.payload as { team: string };
-    
-    // Rundennummer aus dem Event (wird vom Parser gesetzt)
     const roundNumber = event.round;
     if (!roundNumber || seenRounds.has(roundNumber)) continue;
     seenRounds.add(roundNumber);
     
-    // Welche Seite hat gewonnen?
     const ctWon = payload.team === 'CT';
-    
-    // Bei Runde 16+ sind die Seiten getauscht!
-    const isSecondHalf = roundNumber > 15;
-    
-    // Erste Hälfte: CT = team1, T = team2
-    // Zweite Hälfte: CT = team2, T = team1
+    const isSecondHalf = roundNumber > HALFTIME_ROUND;
     if (ctWon) {
       if (isSecondHalf) team2Score++; else team1Score++;
     } else {
@@ -77,7 +53,7 @@ export function getProgression(): ProgressionData {
   return {
     team1: { name: team1Name },
     team2: { name: team2Name },
-    halftimeRound: 15,
+    halftimeRound: HALFTIME_ROUND,
     rounds,
   };
 }
