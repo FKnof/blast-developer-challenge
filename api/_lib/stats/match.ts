@@ -1,10 +1,10 @@
 import type { MatchData, GameEvent } from '../../../src/types/index.js';
 import { getParsedEvents } from '../parser/index.js';
 
-interface TeamInfo {
-  name: string;
-  score: number;
-}
+// interface TeamInfo {
+//   name: string;
+//   score: number;
+// }
 
 /**
  * Extract match metadata from parsed events

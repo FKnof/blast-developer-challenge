@@ -1,6 +1,6 @@
 import type { GameEvent } from '../../../../src/types/index.js';
 import type { NormalizedLine } from '../normalize.js';
-import { extractQuoted, extractAllQuoted } from '../helpers.js';
+import { extractAllQuoted } from '../helpers.js';
 
 /**
  * Parse a team scored event
