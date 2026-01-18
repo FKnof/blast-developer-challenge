@@ -101,7 +101,7 @@ export function ProgressionChart({ data }: ProgressionChartProps) {
         <CardDescription>Score development throughout the match, round by round.</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig} className="min-h-[300px] w-full">
+        <ChartContainer config={chartConfig} className="h-[450px] w-full">
           <LineChart
             data={rounds}
             margin={{ top: 20, right: 30, left: 0, bottom: 0 }}
