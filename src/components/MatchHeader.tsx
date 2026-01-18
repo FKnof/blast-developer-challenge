@@ -33,7 +33,7 @@ export function MatchHeader({ match }: MatchHeaderProps) {
           <div className="flex items-center justify-center gap-4 md:gap-8 w-full">
             {/* Team 1 */}
             <div className="flex-1 text-right">
-              <h2 className="text-lg md:text-2xl font-heading truncate uppercase">
+              <h2 className="text-lg md:text-2xl font-heading">
                 {match.teams.ct.name}
               </h2>
             </div>
@@ -51,7 +51,7 @@ export function MatchHeader({ match }: MatchHeaderProps) {
 
             {/* Team 2 */}
             <div className="flex-1 text-left">
-              <h2 className="text-lg md:text-2xl font-heading truncate uppercase">
+              <h2 className="text-lg md:text-2xl font-heading">
                 {match.teams.t.name}
               </h2>
             </div>
