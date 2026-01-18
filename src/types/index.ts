@@ -102,8 +102,6 @@ export interface RoundDataPoint {
   round: number;
   team1Score: number;
   team2Score: number;
-  winner: 'team1' | 'team2' | null;
-  winnerSide: 'CT' | 'T' | null;
 }
 
 export interface ProgressionData {

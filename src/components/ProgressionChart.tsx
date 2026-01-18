@@ -5,11 +5,10 @@ import {
   YAxis,
   CartesianGrid,
   ReferenceLine,
+  Tooltip,
 } from 'recharts';
 import {
   ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
   ChartLegend,
   ChartLegendContent,
   type ChartConfig,
@@ -20,8 +19,6 @@ export interface RoundDataPoint {
   round: number;
   team1Score: number;
   team2Score: number;
-  winner: 'team1' | 'team2' | null;
-  winnerSide: 'CT' | 'T' | null;
 }
 
 export interface ProgressionData {
@@ -37,6 +34,48 @@ interface ProgressionChartProps {
 
 export function ProgressionChart({ data }: ProgressionChartProps) {
   const { team1, team2, halftimeRound, rounds } = data;
+  
+  // Custom Tooltip mit CT/T Info
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (!active || !payload?.length) return null;
+    
+    const round = label as number;
+    const isSecondHalf = round > halftimeRound;
+    
+    // Erste Hälfte: team1 = CT, team2 = T
+    // Zweite Hälfte: team1 = T, team2 = CT
+    const team1Side = isSecondHalf ? 'T' : 'CT';
+    const team2Side = isSecondHalf ? 'CT' : 'T';
+    
+    const team1Data = payload.find((p: any) => p.dataKey === 'team1Score');
+    const team2Data = payload.find((p: any) => p.dataKey === 'team2Score');
+    
+    return (
+      <div className="rounded-lg border bg-background p-3 shadow-md">
+        <p className="font-medium mb-2">Round {round}</p>
+        {team1Data && (
+          <div className="flex items-center gap-2 text-sm">
+            <div 
+              className="h-2.5 w-2.5 rounded-full" 
+              style={{ backgroundColor: 'hsl(var(--chart-1))' }} 
+            />
+            <span>{team1.name}: {team1Data.value}</span>
+            <span className="text-muted-foreground">({team1Side})</span>
+          </div>
+        )}
+        {team2Data && (
+          <div className="flex items-center gap-2 text-sm">
+            <div 
+              className="h-2.5 w-2.5 rounded-full" 
+              style={{ backgroundColor: 'hsl(var(--chart-2))' }} 
+            />
+            <span>{team2.name}: {team2Data.value}</span>
+            <span className="text-muted-foreground">({team2Side})</span>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   // Chart-Konfiguration mit Team-Namen und Farben
   const chartConfig: ChartConfig = {
@@ -109,19 +148,13 @@ export function ProgressionChart({ data }: ProgressionChartProps) {
               strokeOpacity={0.5}
             />
             
-            <ChartTooltip
-              content={
-                <ChartTooltipContent
-                  labelFormatter={(value) => `Round ${value}`}
-                />
-              }
-            />
+            <Tooltip content={<CustomTooltip />} />
             
             <ChartLegend content={<ChartLegendContent />} />
             
             {/* Team 1 Linie */}
             <Line
-              type="stepAfter"
+              type="linear"
               dataKey="team1Score"
               stroke="var(--color-team1Score)"
               strokeWidth={2}
@@ -131,7 +164,7 @@ export function ProgressionChart({ data }: ProgressionChartProps) {
             
             {/* Team 2 Linie */}
             <Line
-              type="stepAfter"
+              type="linear"
               dataKey="team2Score"
               stroke="var(--color-team2Score)"
               strokeWidth={2}
