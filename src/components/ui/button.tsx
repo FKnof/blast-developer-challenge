@@ -18,9 +18,9 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        // Tab navigation variants
-        tab: "font-tabs px-5 py-2.5 font-semibold uppercase tracking-wide rounded-lg border-2 border-transparent text-muted-foreground hover:border-primary/50 hover:text-foreground",
-        tabActive: "font-tabs px-5 py-2.5 font-semibold uppercase tracking-wide rounded-lg border-2 border-primary text-foreground",
+        // Tab navigation variants - smaller on mobile to fit in one row
+        tab: "font-tabs px-2.5 py-1.5 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold uppercase tracking-wide rounded-lg border-2 border-transparent text-muted-foreground hover:border-primary/50 hover:text-foreground",
+        tabActive: "font-tabs px-2.5 py-1.5 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold uppercase tracking-wide rounded-lg border-2 border-primary text-foreground",
       },
       size: {
         default: "h-10 px-4 py-2",

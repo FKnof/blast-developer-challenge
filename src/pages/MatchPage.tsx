@@ -18,50 +18,56 @@ export function MatchPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen p-4 md:p-8">
-        <div className="max-w-6xl mx-auto space-y-6">
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex flex-col items-center gap-4">
-                <Skeleton className="h-10 w-full max-w-md" />
-                <Skeleton className="h-6 w-48" />
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-6">
-              <Skeleton className="h-8 w-32 mb-4" />
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Skeleton className="h-6 w-24" />
-                  <Skeleton className="h-48 w-full" />
+      <>
+        <main className="h-screen p-4 md:p-8 overflow-auto">
+          <div className="max-w-6xl mx-auto space-y-6">
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex flex-col items-center gap-4">
+                  <Skeleton className="h-10 w-full max-w-md" />
+                  <Skeleton className="h-6 w-48" />
                 </div>
-                <div className="space-y-2">
-                  <Skeleton className="h-6 w-24" />
-                  <Skeleton className="h-48 w-full" />
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-6">
+                <Skeleton className="h-8 w-32 mb-4" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Skeleton className="h-6 w-24" />
+                    <Skeleton className="h-48 w-full" />
+                  </div>
+                  <div className="space-y-2">
+                    <Skeleton className="h-6 w-24" />
+                    <Skeleton className="h-48 w-full" />
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+              </CardContent>
+            </Card>
+          </div>
+        </main>
+        <Footer />
+      </>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen p-4 md:p-8">
-        <div className="max-w-6xl mx-auto">
-          <Card>
-            <CardContent className="p-6">
-              <div className="text-center text-red-600">
-                <p className="text-lg font-semibold">Error loading match data</p>
-                <p className="text-sm">{error}</p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+      <>
+        <main className="h-screen p-4 md:p-8 overflow-auto">
+          <div className="max-w-6xl mx-auto">
+            <Card>
+              <CardContent className="p-6">
+                <div className="text-center text-red-600">
+                  <p className="text-lg font-semibold">Error loading match data</p>
+                  <p className="text-sm">{error}</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </main>
+        <Footer />
+      </>
     );
   }
 
@@ -70,56 +76,58 @@ export function MatchPage() {
   }
 
   return (
-    <div className="min-h-screen p-4 md:p-8">
-      <div className="max-w-6xl mx-auto space-y-6">
-        <MatchHeader match={match} />
-        
-        {/* Tab Navigation */}
-        <div className="flex flex-wrap gap-3">
-          <Button
-            variant={activeTab === 'scoreboard' ? 'tabActive' : 'tab'}
-            onClick={() => setActiveTab('scoreboard')}
-          >
-            <span className="md:hidden">Stats</span>
-            <span className="hidden md:inline">Match Stats</span>
-          </Button>
-          <Button
-            variant={activeTab === 'progression' ? 'tabActive' : 'tab'}
-            onClick={() => setActiveTab('progression')}
-          >
-            <span className="md:hidden">Progression</span>
-            <span className="hidden md:inline">Score Progression</span>
-          </Button>
-          <Button
-            variant={activeTab === 'players' ? 'tabActive' : 'tab'}
-            onClick={() => setActiveTab('players')}
-          >
-            <span className="md:hidden">Player</span>
-            <span className="hidden md:inline">Player Spotlight</span>
-          </Button>
-          <Button
-            variant={activeTab === 'rounds' ? 'tabActive' : 'tab'}
-            onClick={() => setActiveTab('rounds')}
-          >
-            <span className="md:hidden">Duration</span>
-            <span className="hidden md:inline">Round Durations</span>
-          </Button>
+    <>
+      {/* Main Content - fixed height, footer always below the fold */}
+      <main className="h-screen p-4 md:p-8 overflow-auto">
+        <div className="max-w-6xl mx-auto space-y-6">
+          <MatchHeader match={match} />
+          
+          {/* Tab Navigation */}
+          <div className="flex flex-wrap gap-3">
+            <Button
+              variant={activeTab === 'scoreboard' ? 'tabActive' : 'tab'}
+              onClick={() => setActiveTab('scoreboard')}
+            >
+              <span className="md:hidden">Stats</span>
+              <span className="hidden md:inline">Match Stats</span>
+            </Button>
+            <Button
+              variant={activeTab === 'progression' ? 'tabActive' : 'tab'}
+              onClick={() => setActiveTab('progression')}
+            >
+              <span className="md:hidden">Progression</span>
+              <span className="hidden md:inline">Score Progression</span>
+            </Button>
+            <Button
+              variant={activeTab === 'players' ? 'tabActive' : 'tab'}
+              onClick={() => setActiveTab('players')}
+            >
+              <span className="md:hidden">Player</span>
+              <span className="hidden md:inline">Player Spotlight</span>
+            </Button>
+            <Button
+              variant={activeTab === 'rounds' ? 'tabActive' : 'tab'}
+              onClick={() => setActiveTab('rounds')}
+            >
+              <span className="md:hidden">Duration</span>
+              <span className="hidden md:inline">Round Durations</span>
+            </Button>
+          </div>
+          
+          {/* Tab Content */}
+          {activeTab === 'scoreboard' && <Scoreboard scoreboard={scoreboard} />}
+          {activeTab === 'progression' && <ProgressionChart data={progression} />}
+          {activeTab === 'players' && (
+            <PlayerSpotlight 
+              teams={scoreboard.teams} 
+              matchAverages={scoreboard.matchAverages} 
+            />
+          )}
+          {activeTab === 'rounds' && <RoundsChart data={rounds} />}
         </div>
-        
-        {/* Tab Content */}
-        {activeTab === 'scoreboard' && <Scoreboard scoreboard={scoreboard} />}
-        {activeTab === 'progression' && <ProgressionChart data={progression} />}
-        {activeTab === 'players' && (
-          <PlayerSpotlight 
-            teams={scoreboard.teams} 
-            matchAverages={scoreboard.matchAverages} 
-          />
-        )}
-        {activeTab === 'rounds' && <RoundsChart data={rounds} />}
-      </div>
+      </main>
       
-      {/* Footer */}
       <Footer />
-    </div>
+    </>
   );
 }
