@@ -5,6 +5,8 @@ import { Scoreboard } from '../components/Scoreboard';
 import { ProgressionChart } from '../components/ProgressionChart';
 import { PlayerSpotlight } from '../components/PlayerSpotlight';
 import { RoundsChart } from '../components/RoundsChart';
+import { Footer } from '../components/Footer';
+import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { Skeleton } from '../components/ui/skeleton';
 
@@ -73,47 +75,35 @@ export function MatchPage() {
         <MatchHeader match={match} />
         
         {/* Tab Navigation */}
-        <div className="flex gap-2 border-b">
-          <button
+        <div className="flex flex-wrap gap-3">
+          <Button
+            variant={activeTab === 'scoreboard' ? 'tabActive' : 'tab'}
             onClick={() => setActiveTab('scoreboard')}
-            className={`px-4 py-2 font-medium transition-colors ${
-              activeTab === 'scoreboard'
-                ? 'border-b-2 border-primary text-primary'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
           >
-            Match Stats
-          </button>
-          <button
+            <span className="md:hidden">Stats</span>
+            <span className="hidden md:inline">Match Stats</span>
+          </Button>
+          <Button
+            variant={activeTab === 'progression' ? 'tabActive' : 'tab'}
             onClick={() => setActiveTab('progression')}
-            className={`px-4 py-2 font-medium transition-colors ${
-              activeTab === 'progression'
-                ? 'border-b-2 border-primary text-primary'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
           >
-            Score Progression
-          </button>
-          <button
+            <span className="md:hidden">Progression</span>
+            <span className="hidden md:inline">Score Progression</span>
+          </Button>
+          <Button
+            variant={activeTab === 'players' ? 'tabActive' : 'tab'}
             onClick={() => setActiveTab('players')}
-            className={`px-4 py-2 font-medium transition-colors ${
-              activeTab === 'players'
-                ? 'border-b-2 border-primary text-primary'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
           >
-            Player Spotlight
-          </button>
-          <button
+            <span className="md:hidden">Player</span>
+            <span className="hidden md:inline">Player Spotlight</span>
+          </Button>
+          <Button
+            variant={activeTab === 'rounds' ? 'tabActive' : 'tab'}
             onClick={() => setActiveTab('rounds')}
-            className={`px-4 py-2 font-medium transition-colors ${
-              activeTab === 'rounds'
-                ? 'border-b-2 border-primary text-primary'
-                : 'text-muted-foreground hover:text-foreground'
-            }`}
           >
-            Round Durations
-          </button>
+            <span className="md:hidden">Duration</span>
+            <span className="hidden md:inline">Round Durations</span>
+          </Button>
         </div>
         
         {/* Tab Content */}
@@ -127,6 +117,9 @@ export function MatchPage() {
         )}
         {activeTab === 'rounds' && <RoundsChart data={rounds} />}
       </div>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
