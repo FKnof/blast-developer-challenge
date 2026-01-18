@@ -39,35 +39,33 @@ export function PlayerSpotlight({ teams, matchAverages }: PlayerSpotlightProps) 
     : 'hsl(var(--chart-2))';
 
   // Prepare chart data with the 4 metrics
-  // X-axis labels include "Avg." prefix in parentheses
   const chartData = [
     {
-      name: `KPR\n(Avg. ${matchAverages.kpr.toFixed(2)})`,
+      name: `KPR\n(${matchAverages.kpr.toFixed(2)})`,
       label: selectedPlayer.kpr.toFixed(2),
       normalizedValue: matchAverages.kpr > 0 
         ? (selectedPlayer.kpr / matchAverages.kpr) * 100 
         : 100,
     },
     {
-      name: `ADR\n(Avg. ${matchAverages.adr.toFixed(0)})`,
+      name: `ADR\n(${matchAverages.adr.toFixed(0)})`,
       label: selectedPlayer.adr.toFixed(0),
       normalizedValue: matchAverages.adr > 0 
         ? (selectedPlayer.adr / matchAverages.adr) * 100 
         : 100,
     },
     {
-      name: `HS%\n(Avg. ${matchAverages.hsPercent}%)`,
+      name: `HS%\n(${matchAverages.hsPercent}%)`,
       label: `${selectedPlayer.hsPercent}%`,
       normalizedValue: matchAverages.hsPercent > 0 
         ? (selectedPlayer.hsPercent / matchAverages.hsPercent) * 100 
         : 100,
     },
     {
-      name: `+/-\n(Avg. ${matchAverages.plusMinus > 0 ? '+' : ''}${matchAverages.plusMinus})`,
+      name: `+/-\n(${matchAverages.plusMinus > 0 ? '+' : ''}${matchAverages.plusMinus})`,
       label: selectedPlayer.plusMinus > 0 
         ? `+${selectedPlayer.plusMinus}` 
         : `${selectedPlayer.plusMinus}`,
-      // For +/-, use raw value scaled
       normalizedValue: selectedPlayer.plusMinus * 10,
     },
   ];
@@ -76,9 +74,9 @@ export function PlayerSpotlight({ teams, matchAverages }: PlayerSpotlightProps) 
     const lines = payload.value.split('\n');
     return (
       <g transform={`translate(${x},${y})`}>
-        <text textAnchor="middle" fill="currentColor" fontSize={13} fontWeight={500}>
-          <tspan x={0} dy={16}>{lines[0]}</tspan>
-          <tspan x={0} dy={16} fontSize={11} fill="hsl(var(--muted-foreground))">
+        <text textAnchor="middle" fill="currentColor" fontSize={12} fontWeight={500}>
+          <tspan x={0} dy={14}>{lines[0]}</tspan>
+          <tspan x={0} dy={12} fontSize={9} fill="hsl(var(--muted-foreground))">
             {lines[1]}
           </tspan>
         </text>

@@ -83,7 +83,7 @@ export function MatchPage() {
           <MatchHeader match={match} />
           
           {/* Tab Navigation */}
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-0.5 md:gap-3">
             <Button
               variant={activeTab === 'scoreboard' ? 'tabActive' : 'tab'}
               onClick={() => setActiveTab('scoreboard')}
