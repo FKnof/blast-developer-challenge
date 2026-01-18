@@ -96,3 +96,19 @@ export interface TeamScoreboard {
 export interface ScoreboardData {
   teams: TeamScoreboard[];
 }
+
+// Progression types
+export interface RoundDataPoint {
+  round: number;
+  team1Score: number;
+  team2Score: number;
+  winner: 'team1' | 'team2' | null;
+  winnerSide: 'CT' | 'T' | null;
+}
+
+export interface ProgressionData {
+  team1: { name: string };
+  team2: { name: string };
+  halftimeRound: number;
+  rounds: RoundDataPoint[];
+}

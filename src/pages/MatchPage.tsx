@@ -1,11 +1,16 @@
+import { useState } from 'react';
 import { useMatchData } from '../hooks/useMatchData';
 import { MatchHeader } from '../components/MatchHeader';
 import { Scoreboard } from '../components/Scoreboard';
+import { ProgressionChart } from '../components/ProgressionChart';
 import { Card, CardContent } from '../components/ui/card';
 import { Skeleton } from '../components/ui/skeleton';
 
+type Tab = 'scoreboard' | 'progression';
+
 export function MatchPage() {
-  const { match, scoreboard, loading, error } = useMatchData();
+  const { match, scoreboard, progression, loading, error } = useMatchData();
+  const [activeTab, setActiveTab] = useState<Tab>('scoreboard');
 
   if (loading) {
     return (
@@ -56,7 +61,7 @@ export function MatchPage() {
     );
   }
 
-  if (!match || !scoreboard) {
+  if (!match || !scoreboard || !progression) {
     return null;
   }
 
@@ -64,7 +69,34 @@ export function MatchPage() {
     <div className="min-h-screen p-4 md:p-8">
       <div className="max-w-6xl mx-auto space-y-6">
         <MatchHeader match={match} />
-        <Scoreboard scoreboard={scoreboard} />
+        
+        {/* Tab Navigation */}
+        <div className="flex gap-2 border-b">
+          <button
+            onClick={() => setActiveTab('scoreboard')}
+            className={`px-4 py-2 font-medium transition-colors ${
+              activeTab === 'scoreboard'
+                ? 'border-b-2 border-primary text-primary'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            Scoreboard
+          </button>
+          <button
+            onClick={() => setActiveTab('progression')}
+            className={`px-4 py-2 font-medium transition-colors ${
+              activeTab === 'progression'
+                ? 'border-b-2 border-primary text-primary'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            Progression
+          </button>
+        </div>
+        
+        {/* Tab Content */}
+        {activeTab === 'scoreboard' && <Scoreboard scoreboard={scoreboard} />}
+        {activeTab === 'progression' && <ProgressionChart data={progression} />}
       </div>
     </div>
   );
