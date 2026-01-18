@@ -39,31 +39,31 @@ export function PlayerSpotlight({ teams, matchAverages }: PlayerSpotlightProps) 
     : 'hsl(var(--chart-2))';
 
   // Prepare chart data with the 4 metrics
-  // X-axis labels include avg in parentheses
+  // X-axis labels include "Avg." prefix in parentheses
   const chartData = [
     {
-      name: `KPR\n(${matchAverages.kpr.toFixed(2)})`,
+      name: `KPR\n(Avg. ${matchAverages.kpr.toFixed(2)})`,
       label: selectedPlayer.kpr.toFixed(2),
       normalizedValue: matchAverages.kpr > 0 
         ? (selectedPlayer.kpr / matchAverages.kpr) * 100 
         : 100,
     },
     {
-      name: `ADR\n(${matchAverages.adr.toFixed(0)})`,
+      name: `ADR\n(Avg. ${matchAverages.adr.toFixed(0)})`,
       label: selectedPlayer.adr.toFixed(0),
       normalizedValue: matchAverages.adr > 0 
         ? (selectedPlayer.adr / matchAverages.adr) * 100 
         : 100,
     },
     {
-      name: `HS%\n(${matchAverages.hsPercent}%)`,
+      name: `HS%\n(Avg. ${matchAverages.hsPercent}%)`,
       label: `${selectedPlayer.hsPercent}%`,
       normalizedValue: matchAverages.hsPercent > 0 
         ? (selectedPlayer.hsPercent / matchAverages.hsPercent) * 100 
         : 100,
     },
     {
-      name: `+/-\n(${matchAverages.plusMinus > 0 ? '+' : ''}${matchAverages.plusMinus})`,
+      name: `+/-\n(Avg. ${matchAverages.plusMinus > 0 ? '+' : ''}${matchAverages.plusMinus})`,
       label: selectedPlayer.plusMinus > 0 
         ? `+${selectedPlayer.plusMinus}` 
         : `${selectedPlayer.plusMinus}`,
@@ -181,7 +181,7 @@ export function PlayerSpotlight({ teams, matchAverages }: PlayerSpotlightProps) 
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={chartData}
-                  margin={{ top: 30, right: 10, left: 10, bottom: 40 }}
+                  margin={{ top: 30, right: 10, left: 30, bottom: 40 }}
                 >
                   <XAxis 
                     dataKey="name"

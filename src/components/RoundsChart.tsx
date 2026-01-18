@@ -46,7 +46,7 @@ export function RoundsChart({ data }: RoundsChartProps) {
   return (
     <Card>
       <CardHeader>
-        <CardDescription>How long did each round last? Color indicates the winner.</CardDescription>
+        <CardDescription>Round duration in seconds. Color indicates the winner.</CardDescription>
       </CardHeader>
       <CardContent>
         {/* Legend */}
@@ -73,7 +73,7 @@ export function RoundsChart({ data }: RoundsChartProps) {
             <BarChart
               data={rounds}
               layout="vertical"
-              margin={{ top: 5, right: 30, left: 40, bottom: 5 }}
+              margin={{ top: 20, right: 30, left: 40, bottom: 5 }}
             >
               <XAxis 
                 type="number"
@@ -111,7 +111,7 @@ export function RoundsChart({ data }: RoundsChartProps) {
                 strokeDasharray="4 4"
                 strokeWidth={2}
                 label={{
-                  value: `Avg ${formatDuration(averageDuration)}`,
+                  value: `Avg: ${formatDuration(averageDuration)}`,
                   position: 'top',
                   fontSize: 11,
                   fill: 'hsl(var(--muted-foreground))',
