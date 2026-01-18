@@ -76,6 +76,7 @@ export interface MatchData {
     t: { name: string; score: number };
   };
   totalRounds: number;
+  totalDuration: number; // in seconds
 }
 
 export interface PlayerStats {
