@@ -3,10 +3,11 @@ import { useMatchData } from '../hooks/useMatchData';
 import { MatchHeader } from '../components/MatchHeader';
 import { Scoreboard } from '../components/Scoreboard';
 import { ProgressionChart } from '../components/ProgressionChart';
+import { PlayerSpotlight } from '../components/PlayerSpotlight';
 import { Card, CardContent } from '../components/ui/card';
 import { Skeleton } from '../components/ui/skeleton';
 
-type Tab = 'scoreboard' | 'progression';
+type Tab = 'scoreboard' | 'progression' | 'players';
 
 export function MatchPage() {
   const { match, scoreboard, progression, loading, error } = useMatchData();
@@ -92,11 +93,27 @@ export function MatchPage() {
           >
             Progression
           </button>
+          <button
+            onClick={() => setActiveTab('players')}
+            className={`px-4 py-2 font-medium transition-colors ${
+              activeTab === 'players'
+                ? 'border-b-2 border-primary text-primary'
+                : 'text-muted-foreground hover:text-foreground'
+            }`}
+          >
+            Players
+          </button>
         </div>
         
         {/* Tab Content */}
         {activeTab === 'scoreboard' && <Scoreboard scoreboard={scoreboard} />}
         {activeTab === 'progression' && <ProgressionChart data={progression} />}
+        {activeTab === 'players' && (
+          <PlayerSpotlight 
+            teams={scoreboard.teams} 
+            matchAverages={scoreboard.matchAverages} 
+          />
+        )}
       </div>
     </div>
   );

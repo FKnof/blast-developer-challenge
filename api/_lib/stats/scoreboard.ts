@@ -150,22 +150,32 @@ export function getScoreboard(): ScoreboardData {
   
   // Convert to PlayerStats and group by team
   const teamPlayers: Map<string, PlayerStats[]> = new Map();
+  const allPlayerStats: PlayerStats[] = [];
   
   for (const player of players.values()) {
+    const kpr = Math.round((player.kills / totalRounds) * 100) / 100;
+    const adr = Math.round((player.damage / totalRounds) * 10) / 10;
+    const hsPercent = player.kills > 0 
+      ? Math.round((player.headshotKills / player.kills) * 100) 
+      : 0;
+    const plusMinus = player.kills - player.deaths;
+    
     const stats: PlayerStats = {
       name: player.name,
       steamId: player.steamId,
+      team: player.originalTeam,
       kills: player.kills,
       deaths: player.deaths,
       assists: player.assists,
-      adr: Math.round((player.damage / totalRounds) * 10) / 10,
-      hsPercent: player.kills > 0 
-        ? Math.round((player.headshotKills / player.kills) * 100) 
-        : 0,
+      adr,
+      hsPercent,
+      kpr,
+      plusMinus,
     };
     
-    const teamName = player.originalTeam;
+    allPlayerStats.push(stats);
     
+    const teamName = player.originalTeam;
     if (!teamPlayers.has(teamName)) {
       teamPlayers.set(teamName, []);
     }
@@ -177,9 +187,16 @@ export function getScoreboard(): ScoreboardData {
     playerList.sort((a, b) => b.kills - a.kills);
   }
   
-  // Build response - Reihenfolge muss mit MatchHeader übereinstimmen!
-  // matchData.teams.ct = Team 1 (links im Header)
-  // matchData.teams.t = Team 2 (rechts im Header)
+  // Calculate match averages across all players
+  const playerCount = allPlayerStats.length || 1;
+  const matchAverages = {
+    kpr: Math.round((allPlayerStats.reduce((sum, p) => sum + p.kpr, 0) / playerCount) * 100) / 100,
+    adr: Math.round((allPlayerStats.reduce((sum, p) => sum + p.adr, 0) / playerCount) * 10) / 10,
+    hsPercent: Math.round(allPlayerStats.reduce((sum, p) => sum + p.hsPercent, 0) / playerCount),
+    plusMinus: Math.round(allPlayerStats.reduce((sum, p) => sum + p.plusMinus, 0) / playerCount),
+  };
+  
+  // Build response
   const team1Players = teamPlayers.get(matchData.teams.ct.name) || [];
   const team2Players = teamPlayers.get(matchData.teams.t.name) || [];
   
@@ -187,6 +204,8 @@ export function getScoreboard(): ScoreboardData {
     teams: [
       { name: matchData.teams.ct.name, players: team1Players },
       { name: matchData.teams.t.name, players: team2Players },
-    ]
+    ],
+    matchAverages,
+    totalRounds,
   };
 }

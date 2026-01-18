@@ -81,11 +81,14 @@ export interface MatchData {
 export interface PlayerStats {
   name: string;
   steamId: string;
+  team: string;
   kills: number;
   deaths: number;
   assists: number;
   adr: number;
   hsPercent: number;
+  kpr: number;       // Kills per Round
+  plusMinus: number; // Kill differential (K - D)
 }
 
 export interface TeamScoreboard {
@@ -93,8 +96,17 @@ export interface TeamScoreboard {
   players: PlayerStats[];
 }
 
+export interface MatchAverages {
+  kpr: number;
+  adr: number;
+  hsPercent: number;
+  plusMinus: number;
+}
+
 export interface ScoreboardData {
   teams: TeamScoreboard[];
+  matchAverages: MatchAverages;
+  totalRounds: number;
 }
 
 // Progression types
