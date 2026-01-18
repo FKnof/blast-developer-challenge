@@ -16,6 +16,10 @@ export function MatchHeader({ match }: MatchHeaderProps) {
   };
 
   const formatDuration = (seconds: number) => {
+    // If we have no duration data, return a placeholder
+    if (!seconds || seconds === 0) {
+      return 'N/A';
+    }
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
@@ -53,9 +57,14 @@ export function MatchHeader({ match }: MatchHeaderProps) {
             </div>
           </div>
 
-          {/* Match Info */}
+          {/* Map Name - Prominent */}
+          <div className="text-base font-medium">
+            {match.map}
+          </div>
+          
+          {/* Match Info - Secondary */}
           <div className="text-sm text-muted-foreground">
-            {match.map} • {formatDate(match.date)} • {match.totalRounds} rounds • {formatDuration(match.totalDuration)} min
+            {formatDate(match.date)} • {match.totalRounds} rounds • {formatDuration(match.totalDuration)} min
           </div>
         </div>
       </CardContent>

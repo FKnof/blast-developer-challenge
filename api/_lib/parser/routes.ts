@@ -1,6 +1,6 @@
 import type { EventRoute } from './types.js';
 import { parseKill, parseAttack, parseAssist, parseFlashAssist } from './parsers/combat.js';
-import { parseWorldTrigger, parseFreezePeriod } from './parsers/world.js';
+import { parseWorldTrigger, parseFreezePeriod, parseGameOver } from './parsers/world.js';
 import { parseTeamScored, parseTeamTriggered, parseTeamPlaying, parseMatchStatus } from './parsers/team.js';
 
 /**
@@ -40,6 +40,11 @@ export const EVENT_ROUTES: EventRoute[] = [
     type: 'freeze_period',
     test: msg => msg.startsWith('Starting Freeze period'),
     parse: parseFreezePeriod,
+  },
+  {
+    type: 'game_over',
+    test: msg => msg.startsWith('Game Over:'),
+    parse: parseGameOver,
   },
   
   // Team events

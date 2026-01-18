@@ -55,3 +55,41 @@ export function parseFreezePeriod(
     payload: {},
   };
 }
+
+/**
+ * Parse game over event
+ * Format: Game Over: competitive 1092904694 de_nuke score 6:16 after 50 min
+ * 
+ * This line contains the total match duration in minutes and the final score.
+ */
+export function parseGameOver(
+  { ts, message, raw }: NormalizedLine,
+  round: number | null
+): GameEvent | null {
+  // Extract duration from "after X min" at the end
+  const afterMatch = message.match(/after (\d+) min/);
+  const durationMinutes = afterMatch ? parseInt(afterMatch[1], 10) : 0;
+  
+  // Extract map name (it's after the match ID and before "score")
+  // Format: "competitive 1092904694 de_nuke score"
+  const mapMatch = message.match(/competitive \d+ (\w+) score/);
+  const map = mapMatch ? mapMatch[1] : null;
+  
+  // Extract final score
+  const scoreMatch = message.match(/score (\d+):(\d+)/);
+  const ctScore = scoreMatch ? parseInt(scoreMatch[1], 10) : 0;
+  const tScore = scoreMatch ? parseInt(scoreMatch[2], 10) : 0;
+  
+  return {
+    ts,
+    type: 'game_over',
+    round,
+    raw,
+    payload: {
+      durationMinutes,
+      map,
+      ctScore,
+      tScore,
+    },
+  };
+}

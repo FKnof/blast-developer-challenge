@@ -20,8 +20,8 @@ export function getMatchData(): MatchData {
   let map = 'unknown';
   let date = '';
   let totalRounds = 0;
-  let matchStartTs = 0;
-  let matchEndTs = 0;
+  let matchStartTs = 0;  // Timestamp when match started
+  let gameOverTs = 0;    // Timestamp when game ended
   
   // === SCHRITT 1: Aktuelles Seiten-Mapping tracken ===
   // Wird bei JEDEM match_status_team Event aktualisiert
@@ -39,23 +39,28 @@ export function getMatchData(): MatchData {
   let team2Name = '';  // Das Team, das zuerst T war
   
   for (const event of events) {
-    // === Match-Start Info (Map, Datum) ===
+    // === Match-Start Info (Map, Datum, Timestamp) ===
     if (event.type === 'match_start') {
       const payload = event.payload as { map?: string };
       if (payload.map) {
         map = payload.map;
       }
+      // Save timestamp - will be overwritten, keeping the last match_start
+      // (The parser already filters to only include events after the real match start)
+      matchStartTs = event.ts;
       if (event.ts && !date) {
         date = new Date(event.ts).toISOString();
       }
     }
     
-    // Track first round_start and last round_end for total duration
-    if (event.type === 'round_start' && event.round === 1 && !matchStartTs) {
-      matchStartTs = event.ts;
-    }
-    if (event.type === 'round_end') {
-      matchEndTs = event.ts; // Keep updating to get the last one
+    // Get timestamp from game_over event to calculate total match duration
+    if (event.type === 'game_over') {
+      gameOverTs = event.ts;
+      // Also get map from game_over if not already set
+      const payload = event.payload as { map?: string };
+      if (payload.map && map === 'unknown') {
+        map = payload.map;
+      }
     }
     
     // === SCHRITT 3: Seiten-Mapping IMMER aktualisieren ===
@@ -119,9 +124,10 @@ export function getMatchData(): MatchData {
   const team1Score = teamScores.get(team1Name) ?? 0;
   const team2Score = teamScores.get(team2Name) ?? 0;
   
-  // Calculate total match duration in seconds
-  const totalDuration = matchStartTs && matchEndTs 
-    ? Math.round((matchEndTs - matchStartTs) / 1000) 
+  // Calculate total match duration from timestamps (in seconds)
+  // matchStartTs and gameOverTs are in milliseconds from Date.parse()
+  const totalDuration = matchStartTs && gameOverTs
+    ? Math.round((gameOverTs - matchStartTs) / 1000)
     : 0;
   
   return {
