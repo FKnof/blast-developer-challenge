@@ -19,8 +19,8 @@ export function MatchPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col pb-6">
-        <main className="p-4 md:p-8">
+      <div className="flex flex-col min-h-screen">
+        <main className="flex-1 p-4 md:p-8 pb-20">
           <div className="max-w-6xl mx-auto space-y-6">
             <Card>
               <CardContent className="p-6">
@@ -54,8 +54,8 @@ export function MatchPage() {
 
   if (error) {
     return (
-      <div className="flex flex-col pb-6">
-        <main className="p-4 md:p-8">
+      <div className="flex flex-col min-h-screen">
+        <main className="flex-1 p-4 md:p-8 pb-20">
           <div className="max-w-6xl mx-auto">
             <Card>
               <CardContent className="p-6">
@@ -77,8 +77,8 @@ export function MatchPage() {
   }
 
   return (
-    <div className="flex flex-col pb-6">
-      <main className="p-4 md:p-8">
+    <div className="flex flex-col min-h-screen">
+      <main className="flex-1 p-4 md:p-8 pb-20">
         <div className="max-w-6xl mx-auto space-y-6">
           <MatchHeader match={match} />
           
