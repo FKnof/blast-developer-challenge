@@ -22,6 +22,7 @@ The solution focuses on correctness, clarity, and intentional tradeoffs rather t
 **Backend**
 
 * TypeScript
+* Express.js for API routing with CORS middleware
 * Node.js
 * Vercel Serverless Functions
 
