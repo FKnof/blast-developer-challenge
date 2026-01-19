@@ -86,9 +86,16 @@
   * {
     @apply border-border;
   }
+  
+  /* Fix for mobile viewport height jumping */
+  html {
+    height: 100%;
+  }
+  
   body {
     @apply bg-background text-foreground;
     font-family: 'Inter', sans-serif;
+    min-height: 100%;
   }
   
   /* Überschriften: Geom Black Italic */
