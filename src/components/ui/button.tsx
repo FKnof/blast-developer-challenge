@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
@@ -19,8 +19,8 @@ const buttonVariants = cva(
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         // Tab navigation variants - smaller on mobile to fit in one row
-        tab: "font-tabs px-1.5 py-0.5 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold uppercase tracking-wide rounded-lg border-2 border-transparent text-muted-foreground hover:border-primary/50 hover:text-foreground",
-        tabActive: "font-tabs px-1.5 py-0.5 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold uppercase tracking-wide rounded-lg border-2 border-primary text-foreground",
+        tab: "font-tabs px-1.5 py-0.5 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold uppercase tracking-wide rounded-lg border-2 border-transparent text-muted-foreground hover:text-foreground",
+        tabActive: "font-tabs px-1.5 py-0.5 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold uppercase tracking-wide rounded-lg border-2 border-transparent sm:border-primary text-foreground",
       },
       size: {
         default: "h-10 px-4 py-2",

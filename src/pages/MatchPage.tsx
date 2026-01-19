@@ -9,6 +9,7 @@ import { Footer } from '../components/Footer';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { Skeleton } from '../components/ui/skeleton';
+import { BarChart3, TrendingUp, Users, Clock } from 'lucide-react';
 
 type Tab = 'scoreboard' | 'progression' | 'players' | 'rounds';
 
@@ -18,8 +19,8 @@ export function MatchPage() {
 
   if (loading) {
     return (
-      <>
-        <main className="h-screen p-4 md:p-8 overflow-auto">
+      <div className="min-h-screen flex flex-col">
+        <main className="flex-1 p-4 md:p-8">
           <div className="max-w-6xl mx-auto space-y-6">
             <Card>
               <CardContent className="p-6">
@@ -47,14 +48,14 @@ export function MatchPage() {
           </div>
         </main>
         <Footer />
-      </>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <>
-        <main className="h-screen p-4 md:p-8 overflow-auto">
+      <div className="min-h-screen flex flex-col">
+        <main className="flex-1 p-4 md:p-8">
           <div className="max-w-6xl mx-auto">
             <Card>
               <CardContent className="p-6">
@@ -67,7 +68,7 @@ export function MatchPage() {
           </div>
         </main>
         <Footer />
-      </>
+      </div>
     );
   }
 
@@ -76,41 +77,48 @@ export function MatchPage() {
   }
 
   return (
-    <>
-      {/* Main Content - fixed height, footer always below the fold */}
-      <main className="h-screen p-4 md:p-8 overflow-auto">
+    <div className="min-h-screen flex flex-col">
+      <main className="flex-1 p-4 md:p-8">
         <div className="max-w-6xl mx-auto space-y-6">
           <MatchHeader match={match} />
           
           {/* Tab Navigation */}
-          <div className="flex flex-wrap gap-0.5 md:gap-3">
+          <div className="flex gap-2 md:gap-3">
             <Button
               variant={activeTab === 'scoreboard' ? 'tabActive' : 'tab'}
               onClick={() => setActiveTab('scoreboard')}
+              className="flex-1 sm:flex-none"
             >
-              <span className="md:hidden">Stats</span>
-              <span className="hidden md:inline">Match Stats</span>
+              <BarChart3 className={activeTab === 'scoreboard' ? 'h-5 w-5 text-primary' : 'h-4 w-4'} />
+              <span className="hidden sm:inline md:hidden">Stats</span>
+              <span className="hidden md:inline text-xs lg:text-sm">Match Stats</span>
             </Button>
             <Button
               variant={activeTab === 'progression' ? 'tabActive' : 'tab'}
               onClick={() => setActiveTab('progression')}
+              className="flex-1 sm:flex-none"
             >
-              <span className="md:hidden">Progression</span>
-              <span className="hidden md:inline">Score Progression</span>
+              <TrendingUp className={activeTab === 'progression' ? 'h-5 w-5 text-primary' : 'h-4 w-4'} />
+              <span className="hidden sm:inline md:hidden">Progression</span>
+              <span className="hidden md:inline text-xs lg:text-sm">Score Progression</span>
             </Button>
             <Button
               variant={activeTab === 'players' ? 'tabActive' : 'tab'}
               onClick={() => setActiveTab('players')}
+              className="flex-1 sm:flex-none"
             >
-              <span className="md:hidden">Player</span>
-              <span className="hidden md:inline">Player Spotlight</span>
+              <Users className={activeTab === 'players' ? 'h-5 w-5 text-primary' : 'h-4 w-4'} />
+              <span className="hidden sm:inline md:hidden">Player</span>
+              <span className="hidden md:inline text-xs lg:text-sm">Player Spotlight</span>
             </Button>
             <Button
               variant={activeTab === 'rounds' ? 'tabActive' : 'tab'}
               onClick={() => setActiveTab('rounds')}
+              className="flex-1 sm:flex-none"
             >
-              <span className="md:hidden">Duration</span>
-              <span className="hidden md:inline">Round Durations</span>
+              <Clock className={activeTab === 'rounds' ? 'h-5 w-5 text-primary' : 'h-4 w-4'} />
+              <span className="hidden sm:inline md:hidden">Rounds</span>
+              <span className="hidden md:inline text-xs lg:text-sm">Round Durations</span>
             </Button>
           </div>
           
@@ -126,8 +134,7 @@ export function MatchPage() {
           {activeTab === 'rounds' && <RoundsChart data={rounds} />}
         </div>
       </main>
-      
       <Footer />
-    </>
+    </div>
   );
 }

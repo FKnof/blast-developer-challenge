@@ -50,7 +50,8 @@ export function RoundsChart({ data }: RoundsChartProps) {
   return (
     <Card>
       <CardHeader>
-        <CardDescription>Duration of each round. Color indicates the winning team.</CardDescription>
+        <h2 className="text-xl font-heading text-center sm:hidden mb-2">Round Durations</h2>
+        <CardDescription className="text-center">Duration of each round. Color indicates the winning team.</CardDescription>
       </CardHeader>
       <CardContent>
         {/* Legend */}

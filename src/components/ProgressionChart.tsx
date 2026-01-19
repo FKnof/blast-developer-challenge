@@ -82,7 +82,8 @@ export function ProgressionChart({ data }: ProgressionChartProps) {
   return (
     <Card>
       <CardHeader>
-        <CardDescription>Score development throughout the match, round by round.</CardDescription>
+        <h2 className="text-xl font-heading text-center sm:hidden mb-2">Score Progression</h2>
+        <CardDescription className="text-center">Score development throughout the match, round by round.</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="h-[450px] w-full">

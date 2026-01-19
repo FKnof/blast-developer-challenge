@@ -87,7 +87,8 @@ export function PlayerSpotlight({ teams, matchAverages }: PlayerSpotlightProps) 
   return (
     <Card>
       <CardHeader>
-        <CardDescription>Analyze individual player stats compared to match average.</CardDescription>
+        <h2 className="text-xl font-heading text-center sm:hidden mb-2">Player Spotlight</h2>
+        <CardDescription className="text-center">Analyze individual player stats compared to match average.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Player Selector */}
